@@ -1,0 +1,148 @@
+# LEGACYBRIDGE Platform — local deployment (fictional engagement; simulated legacy systems).
+# Published ports bind 127.0.0.1 only. Test-only port publishing lives in compose.test.yaml.
+name: legacybridge-platform
+
+secrets:
+  db_superuser: {file: ./deploy/secrets/db_superuser.txt}
+  db_migrator: {file: ./deploy/secrets/db_migrator.txt}
+  db_app: {file: ./deploy/secrets/db_app.txt}
+  db_audit_reader: {file: ./deploy/secrets/db_audit_reader.txt}
+  openai_api_key: {file: ./deploy/secrets/openai_api_key.txt}
+  # HALDEN service credential shared by app and halden; the test overlay replaces the source.
+  halden_secret: {file: ./deploy/secrets/halden_secret.txt}
+
+volumes:
+  pgdata: {name: lbf-pgdata}
+  skarvik-exchange: {name: lbf-skarvik-exchange}
+  skarvik-data: {name: lbf-skarvik-data}
+  wiretap-ledger: {name: lbf-wiretap-ledger}
+  lbf-pause: {name: lbf-pause}
+
+networks:
+  internal: {name: lbf-internal}
+
+services:
+  db:
+    image: postgres:17@sha256:87c8b42f423b45d5247e6aa8fdb2e7762fec164c68a50fe3eb07e7bfcaf4dbcf
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_superuser
+      POSTGRES_DB: postgres
+    secrets: [db_superuser, db_migrator, db_app, db_audit_reader]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/postgres/init:/docker-entrypoint-initdb.d:ro
+    networks: [internal]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lbf"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped  # like its dependants: after a daemon restart the app would otherwise loop without it
+
+  migrate:
+    build: {context: ., dockerfile: deploy/migrate/Dockerfile}
+    image: lbf/migrate:2.0.0
+    environment:
+      LBF_DB_HOST: db
+      LBF_DB_NAME: lbf
+      LBF_DB_MIGRATOR_PASSWORD_FILE: /run/secrets/db_migrator
+    secrets: [db_migrator]
+    networks: [internal]
+    depends_on:
+      db: {condition: service_healthy}
+    restart: "no"
+
+  # --- the application: API + console + engines, ONE process (ADR-F04) --------------------------------------------
+  app:
+    build: {context: ., dockerfile: backend/Dockerfile}
+    image: lbf/app:2.0.0
+    user: "10001:10001"
+    environment:
+      LBF_PROFILE: ${LBF_PROFILE:-default}
+      LBF_PUBLIC_ORIGIN: ${LBF_PUBLIC_ORIGIN:-http://127.0.0.1:8080}
+      LBF_COOKIE_SECURE: ${LBF_COOKIE_SECURE:-false}  # MUST be true behind TLS
+      LBF_DB_HOST: db
+      LBF_DB_NAME: lbf
+      LBF_DB_APP_PASSWORD_FILE: /run/secrets/db_app
+      LBF_DB_AUDIT_READER_PASSWORD_FILE: /run/secrets/db_audit_reader
+      # test profile: HALDEN is reached through the recording wire-tap (LBF_HALDEN_URL=http://wiretap:8090)
+      LBF_HALDEN_URL: ${LBF_HALDEN_URL:-http://halden:8090}
+      LBF_HALDEN_LOGIN: svc_bridge
+      LBF_HALDEN_SECRET_FILE: /run/secrets/halden_secret  # Docker secret only; no environment value, no default
+      LBF_SKARVIK_EXCHANGE_DIR: /exchange
+      LBF_SKARVIK_CONTROL_URL: http://skarvik:8095
+      LBF_TIME_SCALE: ${LBF_TIME_SCALE:-1.0}
+      LBF_TEST_PAUSE_POINTS: ${LBF_TEST_PAUSE_POINTS:-}
+      LBF_PAUSE_DIR: /run/lbf-pause
+      LBF_TRANSPORT_TIMEOUT_SEC: ${LBF_TRANSPORT_TIMEOUT_SEC:-5}
+      LBF_ASSISTANT_PROVIDER: ${LBF_ASSISTANT_PROVIDER:-disabled}
+      LBF_LIVE_INFERENCE: "false"  # live inference is never enabled by this compose file
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-6-luna}  # used only by the openai provider; the only accepted value (ADR-F10)
+      OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+    secrets: [db_app, db_audit_reader, openai_api_key, halden_secret]
+    volumes:
+      - ${LBF_EXCHANGE_SOURCE:-skarvik-exchange}:/exchange
+      - ${LBF_PAUSE_SOURCE:-lbf-pause}:/run/lbf-pause
+    ports: ["127.0.0.1:8080:8080"]
+    networks: [internal]
+    depends_on:
+      db: {condition: service_healthy}
+      migrate: {condition: service_completed_successfully}
+      halden: {condition: service_started}
+      skarvik: {condition: service_started}
+    restart: unless-stopped
+
+  # --- simulated legacy systems (fictional) ----------------------------------------------------------------------
+  # Simulation control planes are OFF unless LBF_SIM_CONTROL=true (demo/test only; SEC-14).
+  halden:
+    build: {context: ./legacy-systems/halden-erp}
+    image: lbf/halden-erp:3.1-platform
+    # The frozen simulator reads its credential only from HALDEN_SECRET (HaldenConfig.java). This deploy-side wrapper
+    # exports it from the mounted Docker secret and refuses to start without one (no fallback to the built-in default).
+    entrypoint: ["/bin/sh", "/opt/lbf-deploy/halden_secret_entrypoint.sh"]
+    command: ["java", "-Xmx256m", "-jar", "/opt/halden/halden-erp.jar"]
+    environment:
+      HALDEN_SIM_CONTROL: ${LBF_SIM_CONTROL:-false}
+      HALDEN_RESET_ON_START: "true"
+    secrets: [halden_secret]
+    volumes:
+      - ./deploy/halden/secret_entrypoint.sh:/opt/lbf-deploy/halden_secret_entrypoint.sh:ro
+    networks: [internal]
+    restart: unless-stopped
+
+  skarvik:
+    build: {context: ./legacy-systems/skarvik-oes}
+    image: lbf/skarvik-oes:4-platform
+    user: "10001:10001"  # exchange share is shared by uid 10001 in the simulator and the application (3a decision 5)
+    environment:
+      SKARVIK_SIM_CONTROL: ${LBF_SIM_CONTROL:-false}
+      SKARVIK_PICKUP_INTERVAL: ${SKARVIK_PICKUP_INTERVAL:-10}
+      SKARVIK_EXTRACT_INTERVAL: ${SKARVIK_EXTRACT_INTERVAL:-30}
+      SKARVIK_DEDUP_WINDOW_SECONDS: ${SKARVIK_DEDUP_WINDOW_SECONDS:-259200}
+    volumes:
+      # named volume by default; the test profile may bind a host directory so host-run tests see the share
+      - ${LBF_EXCHANGE_SOURCE:-skarvik-exchange}:/exchange
+      - skarvik-data:/data
+    networks: [internal]
+    restart: unless-stopped
+
+  # --- test profile only -------------------------------------------------------------------------------------------
+  wiretap:
+    profiles: [test]
+    build: {context: ./tools/wiretap}
+    image: lbf/wiretap:2.0.0
+    environment:
+      WIRETAP_UPSTREAM: http://halden:8090
+      WIRETAP_LEDGER: /wiretap/ledger.jsonl
+      # non-recording relays: oracle access to the simulators (HALDEN direct, SKARVIK control plane)
+      WIRETAP_ORACLE_RELAYS: "18090=http://halden:8090,18095=http://skarvik:8095"
+    volumes:
+      - wiretap-ledger:/wiretap
+    ports:
+      - "127.0.0.1:58091:8090"    # application -> HALDEN through the recording proxy
+      - "127.0.0.1:58099:8099"    # wire-tap control + ledger
+      - "127.0.0.1:58090:18090"   # oracle: HALDEN direct (never counted as application traffic)
+      - "127.0.0.1:58095:18095"   # oracle: SKARVIK control plane
+    networks: [internal]
+    depends_on: [halden, skarvik]

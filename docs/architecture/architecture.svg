@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <title id="t">LEGACYBRIDGE: one controlled order workflow over two incompatible legacy systems</title>
+  <desc id="d">A preparer drafts an order, optionally helped by an assistant that can only read and draft. A different person approves the exact version. The application records one authorization and the transmission, hands the order over once, and then only reads. HALDEN takes synchronous HTTP orders and cannot detect duplicates. SKARVIK takes order files, acknowledges later and deduplicates within a time window. An outcome without evidence stays unknown until a read-only check, or a person, resolves it. A standalone verifier checks exported audit evidence.</desc>
+  <style>
+    .bg{fill:#ffffff}.app{fill:#f3f7fb;stroke:#1f4e79;stroke-width:2}.step{fill:#ffffff;stroke:#1f4e79;stroke-width:1.6}
+    .key{fill:#1f4e79;stroke:#1f4e79}.legacy{fill:#fff4df;stroke:#9a5b00;stroke-width:2}.person{fill:#eaf5ee;stroke:#1f6b3b;stroke-width:1.8}
+    .opt{fill:#f5f1fa;stroke:#6b3fa0;stroke-width:1.8;stroke-dasharray:7 5}.ev{fill:#ffffff;stroke:#54616e;stroke-width:1.6}
+    .unk{fill:#fdeee7;stroke:#b3400f;stroke-width:1.8}
+    .h{font-size:21px;font-weight:700;fill:#10243a}.b{font-size:17px;font-weight:600;fill:#10243a}.t{font-size:16px;fill:#2a3b4d}
+    .w{font-size:17px;font-weight:700;fill:#ffffff}.wt{font-size:15px;fill:#ffffff}.lab{font-size:15.5px;font-weight:600;fill:#10243a}
+    .line{stroke:#1f4e79;stroke-width:2.4;fill:none;marker-end:url(#a)}.read{stroke:#1f6b3b;stroke-width:2.2;fill:none;stroke-dasharray:3 5;marker-end:url(#g)}
+    .ol{stroke:#6b3fa0;stroke-width:2;fill:none;stroke-dasharray:7 5;marker-end:url(#p)}.m1{fill:#1f4e79}.m2{fill:#1f6b3b}.m3{fill:#6b3fa0}
+    @media (prefers-color-scheme: dark){
+      .bg{fill:#0d1117}.app{fill:#111d2b;stroke:#7fb4e6}.step{fill:#0d1520;stroke:#7fb4e6}.key{fill:#2f6ea8;stroke:#7fb4e6}
+      .legacy{fill:#2a1f0c;stroke:#f0b04a}.person{fill:#10251a;stroke:#6ecb8f}.opt{fill:#1d1529;stroke:#b794e6}.ev{fill:#0d1117;stroke:#9aa7b4}
+      .unk{fill:#2d170e;stroke:#f28b5c}.h,.b,.lab{fill:#eef4fa}.t{fill:#c6d2de}
+      .line{stroke:#7fb4e6}.read{stroke:#6ecb8f}.ol{stroke:#b794e6}.m1{fill:#7fb4e6}.m2{fill:#6ecb8f}.m3{fill:#b794e6}
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="m1" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="m2" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="m3" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="780"/>
+
+  <rect class="person" x="30" y="20" width="250" height="76" rx="10"/>
+  <text class="b" x="48" y="52">Preparer</text><text class="t" x="48" y="78">drafts and submits</text>
+  <rect class="person" x="310" y="20" width="290" height="76" rx="10"/>
+  <text class="b" x="328" y="52">Approver (another person)</text><text class="t" x="328" y="78">approves the exact version</text>
+  <rect class="opt" x="640" y="20" width="330" height="76" rx="10"/>
+  <text class="b" x="658" y="52">AI assistant (optional, off by default)</text><text class="t" x="658" y="78">reads and drafts only, no authority</text>
+
+  <rect class="app" x="20" y="140" width="960" height="310" rx="14"/>
+  <text class="h" x="500" y="176">LegacyBridge — one application process</text>
+
+  <rect class="step" x="42" y="200" width="196" height="104" rx="9"/>
+  <text class="b" x="58" y="230">1  Draft</text><text class="t" x="58" y="256">versioned, hashed,</text><text class="t" x="58" y="278">checked live</text>
+  <rect class="step" x="276" y="200" width="196" height="104" rx="9"/>
+  <text class="b" x="292" y="230">2  Approve</text><text class="t" x="292" y="256">four eyes, bound to</text><text class="t" x="292" y="278">version and hash</text>
+  <rect class="step" x="510" y="200" width="196" height="104" rx="9"/>
+  <text class="b" x="526" y="230">3  Authorize</text><text class="t" x="526" y="256">one authorization;</text><text class="t" x="526" y="278">record before sending</text>
+  <rect class="key" x="744" y="200" width="214" height="104" rx="9"/>
+  <text class="w" x="760" y="230">4  Hand off once</text><text class="wt" x="760" y="256">never re-sent</text><text class="wt" x="760" y="278">automatically</text>
+  <path class="line" d="M238 252 L274 252"/><path class="line" d="M472 252 L508 252"/><path class="line" d="M706 252 L742 252"/>
+  <path class="line" d="M140 96 L140 198"/><path class="line" d="M374 96 L374 198"/>
+  <path class="ol" d="M700 96 L700 124 L200 124 L200 198"/>
+  <text class="lab" x="420" y="118">draft only, shown with a receipt</text>
+
+  <rect class="unk" x="42" y="338" width="430" height="92" rx="9"/>
+  <text class="b" x="58" y="368">No proof? The outcome is UNKNOWN</text>
+  <text class="t" x="58" y="394">read-only re-checks, then a person decides:</text><text class="t" x="58" y="416">verified read, or attestation (never “verified”)</text>
+  <rect class="step" x="510" y="338" width="448" height="92" rx="9"/>
+  <text class="b" x="526" y="368">5  Confirm by reading back</text>
+  <text class="t" x="526" y="394">account, reference and lines must all match;</text><text class="t" x="526" y="416">an acknowledgement alone is shown as such</text>
+  <path class="line" d="M508 384 L474 384"/>
+
+  <rect class="legacy" x="20" y="520" width="450" height="130" rx="12"/>
+  <text class="h" x="40" y="552">HALDEN ERP 3.1 (simulated)</text>
+  <text class="t" x="40" y="580">synchronous HTTP; cannot detect duplicates</text>
+  <text class="t" x="40" y="604">may commit after the caller gave up</text>
+  <text class="t" x="40" y="628">a missing order proves nothing</text>
+  <rect class="legacy" x="530" y="520" width="450" height="130" rx="12"/>
+  <text class="h" x="550" y="552">SKARVIK OES 4 (simulated)</text>
+  <text class="t" x="550" y="580">order files on a share; late or lost acks</text>
+  <text class="t" x="550" y="604">deduplicates by message within a window</text>
+  <text class="t" x="550" y="628">authorized withdrawal or one redelivery</text>
+
+  <path class="line" d="M848 304 L848 322 L968 322 L968 486 L300 486 L300 518"/>
+  <path class="line" d="M900 486 L900 518"/>
+  <text class="lab" x="306" y="479" style="font-size:14px">at most one handoff per authorization</text>
+  <path class="read" d="M130 518 L130 432"/><path class="read" d="M620 518 L620 432"/>
+  <text class="lab" x="142" y="510">read-only</text><text class="lab" x="632" y="510">acks, extracts (read-only)</text>
+
+  <rect class="ev" x="20" y="690" width="450" height="70" rx="10"/>
+  <text class="b" x="40" y="719">PostgreSQL</text><text class="t" x="40" y="745">state and audit hash chain commit together</text>
+  <rect class="ev" x="530" y="690" width="450" height="70" rx="10"/>
+  <text class="b" x="550" y="719">Standalone verifier</text><text class="t" x="550" y="745">checks exports without the application</text>
+  <path class="line" d="M980 400 L992 400 L992 725 L982 725"/><text class="lab" x="800" y="680">audit export</text>
+  <path class="line" d="M28 452 L10 452 L10 725 L18 725"/>
+</svg>

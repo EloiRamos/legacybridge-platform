@@ -1,0 +1,10 @@
+id: R12
+title: UNKNOWN survives restarts
+severity: C
+variants:
+  - name: restart_twice
+    setup: operation UNKNOWN (R02 setup)
+    fault: restart the application twice
+    expected: {state_identical: true, evidence_identical: true, permitted_actions_identical: true, schedule_resumes_from_stored_timestamps: true, additional_handoffs: 0}
+    forbidden: [state loss, schedule reset to zero]
+oracles: [DB rows before/after, audit verifier]

@@ -1,0 +1,34 @@
+id: T27
+class: reconciliation_investigation
+user: rafael
+prompt: Which SKARVIK orders still await acknowledgement?
+baseline: status {AWAITING_ACK}
+oracle:
+  type: listed
+  fixtures:
+  - AWAITING_ACK
+tools_any:
+- list_operations
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: list_operations
+    arguments:
+      state: AWAITING_ACK
+      backend_id: skarvik
+      customer: null
+- final:
+    summary: '{AWAITING_ACK} is in the SKARVIK inbox awaiting acknowledgement.'
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - value: '{AWAITING_ACK}'
+      source:
+        tool_call_id: c1
+        field_path: operations[0].correlation_value
+    - value: AWAITING_ACK
+      source:
+        tool_call_id: c1
+        field_path: operations[0].state

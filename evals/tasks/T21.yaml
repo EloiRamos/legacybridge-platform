@@ -1,0 +1,28 @@
+id: T21
+class: order_status
+user: rafael
+prompt: What is the status of order {ESCALATED}?
+baseline: status {ESCALATED}
+oracle:
+  type: status
+  fixture: ESCALATED
+tools_any:
+- get_operation_timeline
+- list_operations
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: get_operation_timeline
+    arguments:
+      operation_id: '{ESCALATED_ID}'
+- final:
+    summary: Order {ESCALATED} is in state ESCALATED.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - open_operation
+    facts:
+    - claim: State ESCALATED
+      source:
+        tool_call_id: c1
+        field_path: state

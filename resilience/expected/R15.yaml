@@ -1,0 +1,10 @@
+id: R15
+title: Contradictory SKARVIK acknowledgement
+severity: C
+variants:
+  - name: contradict_ack
+    backend: skarvik
+    fault: contradict_ack (order committed, ack REJECTED)
+    expected: {ack_recorded: REJECTED, state_after_ack: AWAITING_ACK, final_state: ESCALATED, evidence: CONTRADICTION, backend_orders_with_message_id: 1, resends: 0}
+    forbidden: [final REJECTED while an order exists]
+oracles: [SKARVIK oracle orders]

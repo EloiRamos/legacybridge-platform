@@ -1,0 +1,33 @@
+id: T13
+class: discrepancy_explanation
+user: sanna
+prompt: HALDEN flags BW-1002 available; is it?
+baseline: explain BW-1002
+oracle:
+  type: mention
+  tokens:
+  - FLAG_MISMATCH
+  - out_of_stock
+tools_any:
+- explain_stock_discrepancy
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: explain_stock_discrepancy
+    arguments:
+      canonical_sku: BW-1002
+- final:
+    summary: The legacy availability flag disagrees with the zero balance.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - value: OUT_OF_STOCK
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].status
+    - value: FLAG_MISMATCH
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].issues[0]

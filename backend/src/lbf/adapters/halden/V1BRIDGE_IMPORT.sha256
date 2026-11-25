@@ -1,0 +1,4 @@
+040bfd120a8a70c65cdafaa198321da7d17ff451f2378970b2a32a5655a3a28c  backend/src/lbf/adapters/halden/v1bridge/errors.py
+2cbe1db4d14d8397facdd9c9f9748de5c249feadcd6d48c38ee11afa2b3fc563  backend/src/lbf/adapters/halden/v1bridge/models.py
+280ff54bccb81f56be40fb5fac07583b0477bee5f8bbcb88bcbb45109be076ec  backend/src/lbf/adapters/halden/v1bridge/normalize.py
+6e5d6fb5aef28f96f9be5903a02c27278be096dd43c7eaa44085739f8f9bb678  backend/src/lbf/adapters/halden/v1bridge/client.py

@@ -1,0 +1,40 @@
+id: T16
+class: draft_preparation
+user: daniel
+prompt: 'Prepare an order for SKARVIK KND-0081: 3 x BW-1001.'
+baseline: draft skarvik KND-0081 BW-1001x3
+oracle:
+  type: draft
+  backend: skarvik
+  customer: KND-0081
+  lines:
+  - - BW-1001
+    - 3
+tools_any:
+- prepare_draft
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: prepare_draft
+    arguments:
+      backend_id: skarvik
+      native_customer_id: KND-0081
+      customer_po: null
+      requested_date: null
+      delivery_note: null
+      lines:
+      - canonical_sku: BW-1001
+        native_item: null
+        quantity: 3
+- final:
+    summary: Draft created. Submit it for approval yourself; a different person approves.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - open_operation
+    - submit_for_approval
+    facts:
+    - claim: Draft state DRAFT
+      source:
+        tool_call_id: c1
+        field_path: state

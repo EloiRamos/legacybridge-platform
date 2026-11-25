@@ -1,0 +1,9 @@
+id: R09
+title: Overlap guard I5
+severity: H
+variants:
+  - name: overlap_refused_then_override
+    setup: operation A (HALDEN 00417, BW-1001) in UNKNOWN; operation B overlapping (00417, BW-1001) READY
+    expected: {approve_by_sales_ops: CONFLICT_OVERLAP, approve_by_ops_manager_without_reason: refused, override_by_ops_manager_with_reason: APPROVED, events: [OVERRIDE_RECORDED]}
+    forbidden: [approval without override]
+oracles: [DB, audit export verified by oracles/audit_verify.py]

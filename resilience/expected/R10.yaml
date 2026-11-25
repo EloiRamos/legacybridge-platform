@@ -1,0 +1,11 @@
+id: R10
+title: Correlation value already present on a HALDEN order (planted external duplicate)
+severity: H
+variants:
+  - name: planted_duplicate
+    backend: halden
+    setup: harness plants a HALDEN order with the operation's correlation value via a raw E8 outside the application
+    fault: commit_then_500 on the application's E8
+    expected: {final_state: ESCALATED, evidence: AMBIGUOUS_MATCH, app_handoffs: 1, backend_orders_with_ref: 2, resends: 0}
+    forbidden: [CONFIRMED choosing one candidate]
+oracles: [HALDEN E6 via independent client]

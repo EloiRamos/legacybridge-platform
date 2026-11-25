@@ -1,0 +1,31 @@
+id: T03
+class: customer_disambiguation
+user: sanna
+prompt: Is Nordkap the same customer in both ERPs?
+baseline: find customer nordkap
+oracle:
+  type: accounts
+  query: nordkap
+tools_any:
+- search_customers
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: search_customers
+    arguments:
+      query: nordkap
+- final:
+    summary: Curated master data links HALDEN 00417 and SKARVIK KND-0081 as one party.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - claim: HALDEN 00417
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].native_id
+    - claim: SKARVIK KND-0081
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].native_id

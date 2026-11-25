@@ -1,0 +1,10 @@
+id: R03
+title: HALDEN commits after the client timed out (late commit)
+severity: C
+variants:
+  - name: delay_2500ms
+    backend: halden
+    fault: HALDEN sim fault delay 2500 ms on POST /halden/orders; client timeout 1 s
+    expected: {path: [SUBMITTING, UNKNOWN, RECONCILING], intermediate_evidence: NO_MATCH_AFTER_UNCERTAIN, final_state: CONFIRMED, evidence: RECONCILED, app_handoffs: 1, oracle_e8: 1, backend_orders_with_ref: 1, resends: 0}
+    forbidden: [second E8]
+oracles: [wiretap E8 count, HALDEN E6/E7 via independent client]

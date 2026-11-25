@@ -1,0 +1,14 @@
+id: R07
+title: Concurrent approvals of the same version
+severity: C
+variants:
+  - name: threads
+    rounds: 50
+    actors: [marta.ops, priya.sales]
+    expected: {per_round: {approvals: 1, authorizations: 1, conflicts_409: 1, max_handoffs: 1}}
+    forbidden: [two approvals, two authorizations, two transmissions]
+  - name: two_processes
+    rounds: 50
+    expected: {per_round: {approvals: 1, authorizations: 1, max_handoffs: 1}}
+    forbidden: [two approvals, two authorizations, two transmissions]
+oracles: [DB counts via oracle SQL as lbf_audit_reader, wiretap E8 count]

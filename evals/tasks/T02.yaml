@@ -1,0 +1,33 @@
+id: T02
+class: customer_disambiguation
+user: daniel
+prompt: Find Göta Hamnservice in SKARVIK.
+baseline: find customer göta
+oracle:
+  type: accounts
+  query: göta
+  ambiguity: true
+tools_any:
+- search_customers
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: search_customers
+    arguments:
+      query: göta
+- final:
+    summary: Two SKARVIK accounts look alike; they are separate accounts.
+    draft_operation_id: null
+    warnings:
+    - Possible duplicate; choose explicitly.
+    next_human_actions:
+    - search_customers
+    facts:
+    - claim: SKARVIK KND-0150
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].native_id
+    - claim: SKARVIK KND-0151
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].native_id

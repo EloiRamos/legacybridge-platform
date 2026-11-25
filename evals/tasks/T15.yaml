@@ -1,0 +1,40 @@
+id: T15
+class: draft_preparation
+user: daniel
+prompt: 'Prepare an order for HALDEN 00417: 5 x BW-1001.'
+baseline: draft halden 00417 BW-1001x5
+oracle:
+  type: draft
+  backend: halden
+  customer: '00417'
+  lines:
+  - - BW-1001
+    - 5
+tools_any:
+- prepare_draft
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: prepare_draft
+    arguments:
+      backend_id: halden
+      native_customer_id: '00417'
+      customer_po: null
+      requested_date: null
+      delivery_note: null
+      lines:
+      - canonical_sku: BW-1001
+        native_item: null
+        quantity: 5
+- final:
+    summary: Draft created. Submit it for approval yourself; a different person approves.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - open_operation
+    - submit_for_approval
+    facts:
+    - claim: Draft state DRAFT
+      source:
+        tool_call_id: c1
+        field_path: state

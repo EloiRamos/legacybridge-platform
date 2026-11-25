@@ -1,0 +1,43 @@
+id: T24
+class: reconciliation_investigation
+user: rafael
+prompt: Which orders are unresolved?
+baseline: unresolved
+oracle:
+  type: listed
+  fixtures:
+  - UNKNOWN
+  - ESCALATED
+  count: 2
+tools_any:
+- list_operations
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: list_operations
+    arguments:
+      state: UNKNOWN
+      backend_id: null
+      customer: null
+- tool_calls:
+  - call_id: c2
+    name: list_operations
+    arguments:
+      state: ESCALATED
+      backend_id: null
+      customer: null
+- final:
+    summary: 'Two unresolved orders: {UNKNOWN} (UNKNOWN) and {ESCALATED} (ESCALATED).'
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - recheck_in_ui
+    facts:
+    - value: '{UNKNOWN}'
+      source:
+        tool_call_id: c1
+        field_path: operations[0].correlation_value
+    - value: '{ESCALATED}'
+      source:
+        tool_call_id: c2
+        field_path: operations[0].correlation_value

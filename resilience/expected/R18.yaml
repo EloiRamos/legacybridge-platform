@@ -1,0 +1,15 @@
+id: R18
+title: Audit integrity
+severity: C
+variants:
+  - name: audit_insert_failure
+    fault: test-only trigger raises on APPROVAL_GRANTED insert
+    expected: {approvals: 0, authorizations: 0, state: READY}
+  - name: superuser_tamper
+    fault: a superuser modifies one audit row
+    expected: {verifier: BROKEN, first_broken_seq: the modified row's seq}
+  - name: truncated_export
+    fault: export file truncated mid-file
+    expected: {verifier: MANIFEST_MISMATCH}
+forbidden: [approval without audit event, verifier VALID on tampered data]
+oracles: [oracles/audit_verify.py]

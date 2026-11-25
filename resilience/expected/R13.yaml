@@ -1,0 +1,11 @@
+id: R13
+title: Read failures during reconciliation
+severity: H
+variants:
+  - name: e6_error_500_x3
+    backend: halden
+    setup: operation UNKNOWN after a late commit (HALDEN order exists with the ref)
+    fault: HALDEN error_500 on GET /halden/orders for the next 3 reads
+    expected: {failed_runs_verdict: READ_FAILED, intermediate_evidence: RECONCILIATION_FAILED, anchor_kept: true, final_state: CONFIRMED, evidence: RECONCILED, resends: 0}
+    forbidden: [NOT_APPLIED, anchor erased, escalation miscount]
+oracles: [wiretap, HALDEN E6]

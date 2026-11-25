@@ -1,0 +1,65 @@
+# Isolation overlay: a second, disposable stack next to any existing one. Every host port, volume, network and image
+# name is replaced, so it never touches the `legacybridge-platform` project or its data. Used by tools/isolated.sh.
+# Timings make the demonstration repeatable without luck (docs/portfolio/DEMO_WALKTHROUGH.md):
+#   transport timeout 1 s < HALDEN delay preset 2.5 s  => the hand-off always times out before HALDEN commits;
+#   re-check schedule unscaled (first scheduled re-check 5 s later) => UNKNOWN is always visible before it resolves;
+#   SKARVIK acknowledgement deadline 20 s, deduplication window 120 s (test-profile capabilities).
+# Simulation controls are ON here by design; never use this overlay for the default deployment.
+# Proof of ownership: tools/isolated.sh changes or removes a resource only if it carries this checkout's own token.
+x-owner: &owner {io.legacybridge.isolated.owner: "${LBF_OWNER:?set by tools/isolated.sh}"}
+
+secrets:
+  halden_secret: {file: ./deploy/test-fixtures/halden_secret.txt}
+  openai_api_key: {file: ./deploy/test-fixtures/openai_api_key.txt}  # empty: the real key is never mounted here
+
+volumes:
+  pgdata: {name: "${LBF_NS:?set by tools/isolated.sh}-pgdata", labels: *owner}
+  skarvik-exchange: {name: "${LBF_NS}-skarvik-exchange", labels: *owner}
+  skarvik-data: {name: "${LBF_NS}-skarvik-data", labels: *owner}
+  wiretap-ledger: {name: "${LBF_NS}-wiretap-ledger", labels: *owner}
+  lbf-pause: {name: "${LBF_NS}-pause", labels: *owner}
+
+networks:
+  internal: {name: "${LBF_NS}-internal", labels: *owner}
+
+services:
+  db:
+    labels: *owner
+    ports: !override ["127.0.0.1:${LBF_DB_PORT}:5432"]
+  migrate:
+    labels: *owner
+    build: {labels: *owner}
+    image: "${LBF_NS}/migrate:local"
+  app:
+    labels: *owner
+    build: {labels: *owner}
+    image: "${LBF_NS}/app:local"
+    ports: !override ["127.0.0.1:${LBF_APP_PORT}:8080"]
+    environment:
+      LBF_PROFILE: test
+      LBF_PUBLIC_ORIGIN: "http://127.0.0.1:${LBF_APP_PORT}"
+      LBF_HALDEN_URL: http://halden:8090
+      LBF_TRANSPORT_TIMEOUT_SEC: "1"
+      LBF_TIME_SCALE: "1.0"
+      LBF_TEST_PAUSE_POINTS: ""
+  halden:
+    labels: *owner
+    build: {labels: *owner}
+    image: "${LBF_NS}/halden:local"
+    environment:
+      HALDEN_SIM_CONTROL: "true"
+    ports: ["127.0.0.1:${LBF_HALDEN_PORT}:8090"]
+  skarvik:
+    labels: *owner
+    build: {labels: *owner}
+    image: "${LBF_NS}/skarvik:local"
+    environment:
+      SKARVIK_SIM_CONTROL: "true"
+      SKARVIK_PICKUP_INTERVAL: "1"
+      SKARVIK_EXTRACT_INTERVAL: "2"
+      SKARVIK_DEDUP_WINDOW_SECONDS: "120"
+    ports: ["127.0.0.1:${LBF_SKARVIK_PORT}:8095"]
+  wiretap:
+    labels: *owner
+    build: {labels: *owner}
+    image: "${LBF_NS}/wiretap:local"

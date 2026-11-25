@@ -1,0 +1,37 @@
+id: T01
+class: customer_disambiguation
+user: daniel
+prompt: Which Alder & Finch account should I use?
+baseline: find customer alder
+oracle:
+  type: accounts
+  query: alder
+  ambiguity: true
+tools_any:
+- search_customers
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: search_customers
+    arguments:
+      query: alder
+- final:
+    summary: Two separate HALDEN accounts share this name; 10871 is on credit hold.
+    draft_operation_id: null
+    warnings:
+    - 'Similar names in one system: choose explicitly; nothing was merged.'
+    next_human_actions:
+    - search_customers
+    facts:
+    - value: '10233'
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].native_id
+    - value: '10871'
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].native_id
+    - value: HOLD
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].credit_hold

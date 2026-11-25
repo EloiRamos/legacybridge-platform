@@ -1,0 +1,44 @@
+# Claims-audit allowlist (tools/claims_audit.sh, V9-1). Format: <file>|<substring of the allowed line>.
+# Every entry is a NEGATION, a DISCLAIMER or a TECHNICAL FACT about a function/header — never a positive claim.
+#
+# Disclaimers ("no real customer, deployment ...") and the mandatory non-guarantee sentence
+README.md|There is no real customer, deployment or business outcome
+README.md|**ONE POST PER APPROVAL ≠ EXACTLY-ONCE BUSINESS EFFECT.**
+README.md|| Exactly-once business effect on HALDEN |
+docs/architecture/ARCHITECTURE.md|**ONE POST PER APPROVAL ≠ EXACTLY-ONCE BUSINESS EFFECT.**
+docs/engagement/DISCOVERY_NOTES.md|No real customer, deployment
+docs/engagement/ACCEPTANCE_PLAN.md|No real customer, deployment
+docs/engagement/CLIENT_PROFILE.md|No real customer, deployment
+docs/engagement/TRAINING_GUIDE.md|No real customer, deployment
+docs/engagement/ACCEPTANCE_REPORT.md|No real customer, deployment
+docs/engagement/HANDOVER_CHECKLIST.md|No real customer, deployment
+docs/KNOWN_LIMITATIONS.md|Nothing here is production-ready.
+# "No idempotency" / "non-idempotent" — statements that HALDEN lacks it (the problem this project addresses)
+README.md|**no idempotency**
+README.md|No automatic resend of a non-idempotent write
+docs/adr/ADR-F06-skarvik-design.md|idempotency. The fictional Norrvik system has no API
+docs/contracts/HALDEN_LEGACY_API.md|**No idempotency.**
+docs/engagement/CLIENT_PROFILE.md|frozen contract, no idempotency
+docs/architecture/ARCHITECTURE.md|idempotency at all, and SKARVIK deduplicates only for a bounded window
+docs/KNOWN_LIMITATIONS.md|RK-01 Non-idempotent backend writes
+docs/portfolio/CASE_STUDY.md|has no idempotency
+docs/portfolio/CASE_STUDY.md|A non-idempotent write cannot be repeated safely
+docs/api/API.md|There is no idempotency for backend writes
+# "not an idempotency key" — the correlation value is explicitly NOT one (ADR-F05)
+docs/adr/ADR-F05-correlation-keys.md|(not idempotency keys)
+docs/adr/ADR-F05-correlation-keys.md|not an idempotency key
+docs/adr/README.md|(not idempotency keys)
+docs/contracts/CANONICAL_MODEL.md|not an idempotency key
+# Technical facts: a function call count and an HTTP header for draft creation (not a business-effect claim)
+docs/contracts/HALDEN_ADAPTER.md|calls `post_order_once` exactly once
+docs/api/API.md|accepts an `Idempotency-Key` header
+docs/KNOWN_LIMITATIONS.md|`Idempotency-Key` header (draft creation only)
+# Landing page and evidence summary: negations and the technical fact that HALDEN lacks idempotency
+README.md|There is no real customer, deployment or business outcome
+README.md|HALDEN has **no idempotency**
+README.md|HALDEN has no idempotency, so a missing answer
+README.md|is not an exactly-once business effect
+docs/architecture/ARCHITECTURE.md|| Exactly-once business effect on HALDEN |
+docs/architecture/ARCHITECTURE.md|No automatic resend of a non-idempotent write
+docs/architecture/ARCHITECTURE.md|Production readiness or commercial outcomes
+docs/api/API.md|not bound to the body

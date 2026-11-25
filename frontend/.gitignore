@@ -1,0 +1,6 @@
+# Playwright session state (HttpOnly session cookies of demo personas), artifacts and build output
+.auth/
+test-results/
+playwright-report/
+dist/
+node_modules/

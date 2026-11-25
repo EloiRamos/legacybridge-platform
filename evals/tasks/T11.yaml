@@ -1,0 +1,33 @@
+id: T11
+class: discrepancy_explanation
+user: sanna
+prompt: Why is BW-1009 stock unclear in HALDEN?
+baseline: explain BW-1009
+oracle:
+  type: mention
+  tokens:
+  - DUPLICATE_SKU
+  - undetermined
+tools_any:
+- explain_stock_discrepancy
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: explain_stock_discrepancy
+    arguments:
+      canonical_sku: BW-1009
+- final:
+    summary: HALDEN has two item records for BW-1009, so availability is undetermined.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - value: UNDETERMINED
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].status
+    - value: DUPLICATE_SKU
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].issues

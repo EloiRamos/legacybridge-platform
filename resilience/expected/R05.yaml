@@ -1,0 +1,15 @@
+id: R05
+title: Corrupted or malformed responses
+severity: H
+variants:
+  - name: halden_corrupt_response
+    backend: halden
+    fault: wiretap corrupt_response on next E8 (forwarded, body replaced)
+    expected: {final_state: CONFIRMED, evidence: RECONCILED, app_handoffs: 1, oracle_e8: 1, backend_orders_with_ref: 1, resends: 0}
+    forbidden: [treating garbage as rejection or acceptance]
+  - name: skarvik_malformed_ack
+    backend: skarvik
+    fault: SKARVIK malformed_ack (order committed, ack file unparseable)
+    expected: {path: [AWAITING_ACK, UNKNOWN, RECONCILING], intermediate_evidence: ACK_OVERDUE, events: [UNMATCHED_ACK], final_state: CONFIRMED, evidence: RECONCILED, app_handoffs: 1, oracle_claims: 1, backend_orders_with_message_id: 1, resends: 0}
+    forbidden: [treating garbage as rejection or acceptance]
+oracles: [wiretap ledger, SKARVIK oracle orders]

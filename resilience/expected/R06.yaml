@@ -1,0 +1,15 @@
+id: R06
+title: Expired HALDEN ticket on E8; expired user session at approval
+severity: H
+variants:
+  - name: halden_ticket_expired
+    backend: halden
+    fault: HALDEN reset with ticket_ttl_sec=2; the executor's ticket ages past expiry before E8
+    expected: {final_state: NOT_APPLIED, evidence: PRE_PROCESSING_REFUSAL, app_handoffs: 1, oracle_e8: 1, oracle_e8_status: 440, backend_orders_with_ref: 0, resends: 0, new_approval_possible: true}
+    forbidden: [re-login-and-resend]
+  - name: user_session_expired
+    backend: halden
+    fault: approver session idle-expired before approve
+    expected: {http_status: 401, state_unchanged: READY, approvals: 0}
+    forbidden: [any approval recorded]
+oracles: [wiretap (1 E8, status 440), HALDEN orders]

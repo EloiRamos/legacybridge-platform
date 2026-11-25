@@ -1,0 +1,10 @@
+id: R04
+title: HALDEN commits then answers 500
+severity: C
+variants:
+  - name: commit_then_500
+    backend: halden
+    fault: HALDEN sim fault commit_then_500 on POST /halden/orders
+    expected: {path: [SUBMITTING], final_state: CONFIRMED, evidence: RECONCILED, app_handoffs: 1, oracle_e8: 1, backend_orders_with_ref: 1, resends: 0}
+    forbidden: [retry on 5xx]
+oracles: [wiretap E8 count, HALDEN E6/E7 via independent client]

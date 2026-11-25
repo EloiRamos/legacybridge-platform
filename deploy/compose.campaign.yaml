@@ -1,0 +1,15 @@
+# On top of compose.isolated.yaml (LBF_CAMPAIGN=1, tools/isolated.sh): the settings the live conformance, resilience,
+# browser and operations campaigns need: HALDEN through the recording wire-tap, scaled engine timings, pause points and
+# host-visible exchange and pause directories. Every port comes from the environment.
+services:
+  app:
+    environment:
+      LBF_HALDEN_URL: http://wiretap:8090
+      LBF_TIME_SCALE: "0.02"
+      LBF_TEST_PAUSE_POINTS: ${LBF_TEST_PAUSE_POINTS:-}
+  wiretap:
+    ports: !override
+      - "127.0.0.1:${LBF_TAP_PORT:?}:8090"
+      - "127.0.0.1:${LBF_TAP_CONTROL_PORT:?}:8099"
+      - "127.0.0.1:${LBF_TAP_HALDEN_PORT:?}:18090"
+      - "127.0.0.1:${LBF_TAP_SKARVIK_PORT:?}:18095"

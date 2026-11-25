@@ -1,0 +1,40 @@
+id: T04
+class: customer_disambiguation
+user: daniel
+prompt: Can I order for Vantaa Cold Storage?
+baseline: find customer vantaa
+oracle:
+  type: accounts
+  query: vantaa
+tools_any:
+- search_customers
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: search_customers
+    arguments:
+      query: vantaa
+- final:
+    summary: Vantaa is on hold in HALDEN (04450) but not in SKARVIK (KND-0114).
+    draft_operation_id: null
+    warnings:
+    - 'Cross-backend hold conflict: an override by an operations manager is needed.'
+    next_human_actions:
+    - none
+    facts:
+    - value: '04450'
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].native_id
+    - value: HOLD
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].credit_hold
+    - value: KND-0114
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].native_id
+    - value: CLEAR
+      source:
+        tool_call_id: c1
+        field_path: accounts[1].credit_hold

@@ -1,0 +1,10 @@
+id: R14
+title: Late SKARVIK acknowledgement
+severity: H
+variants:
+  - name: ack_delay_30s
+    backend: skarvik
+    fault: ack_delay = ack deadline + 10 s (test 20 s + 10 s)
+    expected: {path: [AWAITING_ACK, UNKNOWN, RECONCILING], intermediate_evidence: ACK_OVERDUE, final_state: CONFIRMED, evidence_first: ACKNOWLEDGED_ONLY, evidence_final: READ_BACK, events: [EVIDENCE_UPGRADED], oracle_claims: 1, backend_orders_with_message_id: 1, resends: 0}
+    forbidden: [redelivery without authorization]
+oracles: [SKARVIK received, SKARVIK oracle orders]

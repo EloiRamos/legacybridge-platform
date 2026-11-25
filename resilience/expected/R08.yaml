@@ -1,0 +1,13 @@
+id: R08
+title: Replayed approvals and concurrent engine claims
+severity: C
+variants:
+  - name: replay_x5
+    expected: {replay_status: 409, transmissions: 1, oracle_handoffs: 1}
+  - name: ui_double_click
+    expected: {approvals: 1, transmissions: 1}
+  - name: two_engines_claim
+    backend: halden_fake
+    expected: {transmissions: 1, fake_handoffs: 1}
+forbidden: [any second transmission]
+oracles: [wiretap or fake counter, transmissions count]

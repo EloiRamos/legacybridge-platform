@@ -1,0 +1,43 @@
+id: T08
+class: inventory_interpretation
+user: daniel
+prompt: How much BW-1006 can we ship, per backend?
+baseline: stock BW-1006
+oracle:
+  type: stock
+  sku: BW-1006
+  backends:
+  - halden
+  - skarvik
+tools_any:
+- explain_stock_discrepancy
+- get_availability
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: explain_stock_discrepancy
+    arguments:
+      canonical_sku: BW-1006
+- final:
+    summary: BW-1006 per backend; never summed across legal entities.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - check_inventory
+    facts:
+    - value: IN_STOCK
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].status
+    - value: '1700'
+      source:
+        tool_call_id: c1
+        field_path: per_backend[0].available_base
+    - value: IN_STOCK
+      source:
+        tool_call_id: c1
+        field_path: per_backend[1].status
+    - value: '350'
+      source:
+        tool_call_id: c1
+        field_path: per_backend[1].available_base

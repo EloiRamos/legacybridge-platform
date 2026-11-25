@@ -1,0 +1,24 @@
+# BR-01 expected customer search results, derived from the seed files and the curated crosswalk.
+schema: lbf-customer-expectations/1.0
+crosswalk:
+  - {party: "Nordkap Marine Services AS", accounts: [[halden, "00417"], [skarvik, KND-0081]]}
+  - {party: "Vantaa Cold Storage Oy", accounts: [[halden, "04450"], [skarvik, KND-0114]]}
+searches:
+  - query: alder
+    accounts: [[halden, "10233"], [halden, "10871"]]
+    ambiguity_groups: [[[halden, "10233"], [halden, "10871"]]]
+    holds: {"10871": HOLD, "10233": CLEAR}
+    parties: []
+  - query: nordkap
+    accounts: [[halden, "00417"], [skarvik, KND-0081]]
+    ambiguity_groups: []
+    parties: [{display_name: "Nordkap Marine Services AS", accounts: [[halden, "00417"], [skarvik, KND-0081]]}]
+  - query: vantaa
+    accounts: [[halden, "04450"], [skarvik, KND-0114]]
+    parties: [{display_name: "Vantaa Cold Storage Oy", conflicts: [CROSS_BACKEND_HOLD_CONFLICT]}]
+  - query: göta
+    accounts: [[skarvik, KND-0150], [skarvik, KND-0151]]
+    ambiguity_groups: [[[skarvik, KND-0150], [skarvik, KND-0151]]]
+    parties: []
+rules:
+  auto_merge_count: 0

@@ -1,0 +1,32 @@
+id: T12
+class: discrepancy_explanation
+user: sanna
+prompt: Why does SKARVIK show two figures for BW-1010?
+baseline: explain BW-1010
+oracle:
+  type: mention
+  tokens:
+  - NON_INTEGRAL_CONVERSION
+tools_any:
+- explain_stock_discrepancy
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: explain_stock_discrepancy
+    arguments:
+      canonical_sku: BW-1010
+- final:
+    summary: One SKARVIK item does not convert to whole drums.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - value: NVL-VG220-208
+      source:
+        tool_call_id: c1
+        field_path: per_backend[2].native_item
+    - value: NON_INTEGRAL_CONVERSION
+      source:
+        tool_call_id: c1
+        field_path: per_backend[2].issues[0]

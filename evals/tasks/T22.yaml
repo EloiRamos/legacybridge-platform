@@ -1,0 +1,28 @@
+id: T22
+class: order_status
+user: sanna
+prompt: What is the status of order {AWAITING_ACK}?
+baseline: status {AWAITING_ACK}
+oracle:
+  type: status
+  fixture: AWAITING_ACK
+tools_any:
+- get_operation_timeline
+- list_operations
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: get_operation_timeline
+    arguments:
+      operation_id: '{AWAITING_ACK_ID}'
+- final:
+    summary: Order {AWAITING_ACK} is in state AWAITING_ACK.
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - open_operation
+    facts:
+    - claim: State AWAITING_ACK
+      source:
+        tool_call_id: c1
+        field_path: state

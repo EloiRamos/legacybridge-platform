@@ -1,0 +1,10 @@
+id: R02
+title: Request lost before reaching HALDEN (black hole)
+severity: C
+variants:
+  - name: blackhole
+    backend: halden
+    fault: wiretap blackhole on next E8; HALDEN client timeout 1 s
+    expected: {path: [SUBMITTING, UNKNOWN], intermediate_evidence: NO_MATCH_AFTER_UNCERTAIN, final_state: ESCALATED, evidence: RECHECK_LIMIT, app_handoffs: 1, oracle_received: 1, oracle_forwarded: 0, backend_orders_with_ref: 0, resends: 0, attestation_possible: true}
+    forbidden: [NOT_APPLIED, resend, CONFIRMED]
+oracles: [wiretap ledger (1 received, forwarded=false), HALDEN E6 via independent client at quiescence]

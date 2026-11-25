@@ -1,0 +1,29 @@
+id: T23
+class: order_status
+user: marta
+prompt: What is the status of order {UNKNOWN_ID}?
+baseline: status {UNKNOWN_ID}
+oracle:
+  type: status
+  fixture: UNKNOWN
+tools_any:
+- get_operation_timeline
+- list_operations
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: get_operation_timeline
+    arguments:
+      operation_id: '{UNKNOWN_ID}'
+- final:
+    summary: Order {UNKNOWN} is in state UNKNOWN.
+    draft_operation_id: null
+    warnings:
+    - Do not re-enter it; automatic checks only read.
+    next_human_actions:
+    - open_operation
+    facts:
+    - claim: State UNKNOWN
+      source:
+        tool_call_id: c1
+        field_path: state

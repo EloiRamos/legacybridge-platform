@@ -1,0 +1,9 @@
+id: R16
+title: Authorization boundary sweep
+severity: C
+variants:
+  - name: role_endpoint_matrix
+    expected: {cells_as_expected_percent: 100, db_state_changes_on_refusal: 0}
+    probes: [every command endpoint x every role, self-approve, stale version, wrong hash, missing CSRF, wrong Origin, expired step-up, assistant tool requesting approval, direct PATCH of state field]
+    forbidden: [any state change on a refused call]
+oracles: [DB snapshot diff via oracle SQL]

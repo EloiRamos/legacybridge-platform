@@ -1,0 +1,26 @@
+%% Source of components.svg (the SVG is drawn from this structure by hand; both are maintained together).
+flowchart LR
+  subgraph Browser["Browser (operator)"]
+    UI["React console<br/>no tokens in storage"]
+  end
+  subgraph App["lbf app — ONE process"]
+    API["FastAPI API<br/>sessions · CSRF · RBAC/SoD"]
+    WF["Workflow commands<br/>version-bound approvals · overlap guard"]
+    ENG["Engines<br/>executor · ack poller · reconciler · sweeper · refresher"]
+    AST["Assistant (optional)<br/>read/draft tools only"]
+    AD["Adapters behind one port<br/>HALDEN · SKARVIK"]
+  end
+  DB[("PostgreSQL 17<br/>lbf_app · lbf_audit_reader · lbf_migrator<br/>append-only audit hash chain")]
+  H["HALDEN ERP 3.1 (simulator)<br/>sync HTTP · no dedup"]
+  S["SKARVIK OES 4 (simulator)<br/>file share · dedup window"]
+  OAI["OpenAI API<br/>(disabled by default)"]
+  V["oracles/audit_verify.py<br/>standalone verifier"]
+  UI -- "loopback 127.0.0.1:8080 (no TLS)" --> API
+  API --> WF --> DB
+  ENG --> DB
+  ENG --> AD
+  AD -- "order POST (at most one per authorization)" --> H
+  AD -- "ORD_*.csv / ACK_*.xml / extracts" --> S
+  AST -. "human's permissions" .-> WF
+  AST -. "double opt-in" .-> OAI
+  API -- "JSONL export + manifest" --> V

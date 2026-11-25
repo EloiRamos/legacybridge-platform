@@ -1,0 +1,14 @@
+[project]
+name = "lbf-oracles"
+version = "2.0.0"
+description = "Independent ground-truth readers and verifiers for LEGACYBRIDGE Platform (never imports lbf)."
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = []  # Python standard library only
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "lbf_oracles"

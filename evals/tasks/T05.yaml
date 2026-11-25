@@ -1,0 +1,31 @@
+id: T05
+class: customer_disambiguation
+user: daniel
+prompt: What is the status of Kiruna Gruvteknik?
+baseline: find customer kiruna
+oracle:
+  type: accounts
+  query: kiruna
+tools_any:
+- search_customers
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: search_customers
+    arguments:
+      query: kiruna
+- final:
+    summary: SKARVIK KND-0190 is blocked (credit hold).
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - none
+    facts:
+    - value: KND-0190
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].native_id
+    - value: HOLD
+      source:
+        tool_call_id: c1
+        field_path: accounts[0].credit_hold

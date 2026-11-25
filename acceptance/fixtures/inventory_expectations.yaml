@@ -1,0 +1,36 @@
+# BR-02 / CF-11 expected availability, derived by hand from the seed files (not from application code).
+# HALDEN rows: legacy-systems/halden-erp/src/main/resources/seed.sql with v1 rule I-1 (strict stock evidence).
+# SKARVIK rows: the SKARVIK seed fixed (legacy-systems/skarvik-oes/seed/), rule I-2.
+# Every listed case must match 100 %.
+schema: lbf-inventory-expectations/1.0
+halden:
+  - {native_item: BW-1001, canonical_sku: BW-1001, status: IN_STOCK, available_base: 300, issues: []}
+  - {native_item: BW-1002, canonical_sku: BW-1002, status: OUT_OF_STOCK, available_base: 0, issues: [FLAG_MISMATCH]}
+  - {native_item: BW-1003, canonical_sku: BW-1003, status: IN_STOCK, available_base: 3, issues: [FLAG_MISMATCH]}
+  - {native_item: BW-1004, canonical_sku: BW-1004, status: IN_STOCK, available_base: 19, issues: []}
+  - {native_item: BW-1005, canonical_sku: BW-1005, status: UNDETERMINED, available_base: null, issues: [UNKNOWN_QUANTITY], note: "MAN on-hand '?'"}
+  - {native_item: BW-1006, canonical_sku: BW-1006, status: IN_STOCK, available_base: 1700, issues: [], note: "'500 ' and '1.200' (thousands dot) parse under v1 rules"}
+  - {native_item: BW-1007, canonical_sku: BW-1007, status: IN_STOCK, available_base: 12, issues: []}
+  - {native_item: BW-1008, canonical_sku: BW-1008, status: IN_STOCK, available_base: 7, issues: []}
+  - {native_item: BW-1009, canonical_sku: BW-1009, status: UNDETERMINED, available_base: null, issues: [DUPLICATE_SKU], note: "'BW-1009' and 'bw-1009 ' item records"}
+  - {native_item: BW-1010, canonical_sku: BW-1010, status: IN_STOCK, available_base: 2, issues: []}
+  - {native_item: BW-1011, canonical_sku: BW-1011, status: UNDETERMINED, available_base: null, issues: [NEGATIVE_QUANTITY], note: "DUS on-hand '-3'"}
+skarvik:
+  # Seed snapshot fresh (age <= inventory_max_age_seconds). Base unit = HALDEN/canonical UoM.
+  - {native_item: NVB-6205-2RS, canonical_sku: BW-1001, status: IN_STOCK, available_base: 120, issues: []}
+  - {native_item: NVB-30206, canonical_sku: BW-1002, status: IN_STOCK, available_base: 40, issues: []}
+  - {native_item: NVH-HPU-22, canonical_sku: BW-1003, status: IN_STOCK, available_base: 2, issues: []}
+  - {native_item: NVV-DN50-SS, canonical_sku: BW-1004, status: OUT_OF_STOCK, available_base: 0, issues: []}
+  - {native_item: NVP-HELM-W, canonical_sku: BW-1005, status: UNDETERMINED, available_base: null, issues: [MISSING_CONVERSION_FACTOR], note: "carton item with PACK = 0"}
+  - {native_item: NV-GL-100L, canonical_sku: BW-1006, status: IN_STOCK, available_base: 350, issues: [], note: "35 KRT x pack 10 = 350 boxes"}
+  - {native_item: NVH-SLANG-12, canonical_sku: BW-1009, status: IN_STOCK, available_base: 18, issues: []}
+  - {native_item: NVL-VG220-20, canonical_sku: BW-1010, status: IN_STOCK, available_base: 6, issues: []}
+  - {native_item: NVL-VG220-208, canonical_sku: BW-1010, status: UNDETERMINED, available_base: null, issues: [NON_INTEGRAL_CONVERSION], note: "3 FAT x 52/5 = 31.2 drums"}
+  - {native_item: NVX-KEDJA-10, canonical_sku: null, status: UNDETERMINED, available_base: null, issues: [UNMAPPED_ITEM], note: "no crosswalk row"}
+skarvik_stale:
+  # With extract regeneration stopped (fault stale_extracts) and the newest STOCK extract older than
+  # inventory_max_age_seconds, every SKARVIK item is STALE with available_base null.
+  rule: {status: STALE, available_base: null}
+cross_backend:
+  # I-3: never summed. BW-1001 shows HALDEN 300 and SKARVIK 120 as separate rows.
+  - {canonical_sku: BW-1001, rows: [{backend_id: halden, available_base: 300}, {backend_id: skarvik, available_base: 120}]}

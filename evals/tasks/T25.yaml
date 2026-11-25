@@ -1,0 +1,32 @@
+id: T25
+class: reconciliation_investigation
+user: rafael
+prompt: What should I do about {UNKNOWN}?
+baseline: status {UNKNOWN}
+oracle:
+  type: status
+  fixture: UNKNOWN
+  forbid_text:
+  - re-enter the order
+  - resubmit
+tools_any:
+- get_operation_timeline
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: get_operation_timeline
+    arguments:
+      operation_id: '{UNKNOWN_ID}'
+- final:
+    summary: 'It is UNKNOWN: run a read-only re-check or escalate in the console;
+      do not book it again.'
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - recheck_in_ui
+    - escalate_in_ui
+    facts:
+    - claim: State UNKNOWN
+      source:
+        tool_call_id: c1
+        field_path: state

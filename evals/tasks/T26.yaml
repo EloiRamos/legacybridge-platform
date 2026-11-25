@@ -1,0 +1,31 @@
+id: T26
+class: reconciliation_investigation
+user: marta
+prompt: Was order {ESCALATED} booked in HALDEN?
+baseline: status {ESCALATED}
+oracle:
+  type: status
+  fixture: ESCALATED
+  forbid_text:
+  - was booked
+  - is booked
+tools_any:
+- get_operation_timeline
+scripted:
+- tool_calls:
+  - call_id: c1
+    name: get_operation_timeline
+    arguments:
+      operation_id: '{ESCALATED_ID}'
+- final:
+    summary: 'Not established: it is ESCALATED and needs a human decision (verified
+      read or attestation).'
+    draft_operation_id: null
+    warnings: []
+    next_human_actions:
+    - resolve_in_ui
+    facts:
+    - claim: State ESCALATED
+      source:
+        tool_call_id: c1
+        field_path: state

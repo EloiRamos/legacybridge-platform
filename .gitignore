@@ -1,0 +1,22 @@
+# Local runtime state of the test profile and live runs
+/governance/
+# Secrets and local data
+.env
+/deploy/secrets/
+/deploy/backups/
+# Evaluation raw transcripts
+/evals/results/
+# Toolchains and caches
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+/frontend/dist/
+/frontend/test-results/
+/frontend/playwright-report/
+/backend/src/lbf/api/static/
+.DS_Store

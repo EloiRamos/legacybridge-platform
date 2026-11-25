@@ -1,0 +1,20 @@
+id: R11
+title: Process kill during submission and restart recovery
+severity: C
+variants:
+  - name: halden_kill_before_handoff
+    backend: halden
+    fault: kill -9 at pause point before_handoff; restart
+    expected: {transmission_state: INTERRUPTED, state_after_restart: UNKNOWN, evidence: INTERRUPTED, oracle_e8: 0, app_handoffs: 0, backend_orders_with_ref: 0, resends: 0, eventual: ESCALATED}
+    forbidden: [resend after restart, lost operation, NOT_APPLIED on HALDEN]
+  - name: skarvik_kill_before_handoff
+    backend: skarvik
+    fault: kill -9 at pause point before_handoff; restart
+    expected: {transmission_state: INTERRUPTED, final_state: NOT_APPLIED, evidence: NEVER_DELIVERED, oracle_claims: 0, backend_orders_with_message_id: 0, resends: 0}
+    forbidden: [resend after restart, lost operation]
+  - name: halden_kill_after_handoff_before_observe
+    backend: halden
+    fault: HALDEN delay 2000 ms; kill -9 at after_handoff_before_observe; restart
+    expected: {transmission_state: INTERRUPTED, final_state: CONFIRMED, evidence: RECONCILED, oracle_e8: 1, backend_orders_with_ref: 1, resends: 0}
+    forbidden: [resend after restart, lost operation]
+oracles: [wiretap counts, SKARVIK received, HALDEN E6]

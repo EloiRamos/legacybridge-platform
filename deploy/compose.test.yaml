@@ -1,0 +1,12 @@
+# Test-profile overlay (docker compose -f compose.yaml -f deploy/compose.test.yaml): publishes the database on loopback for the backend test suite
+# (the suite's network guard allows loopback connections only). Never used by `make up`.
+# The HALDEN credential source is replaced by the PUBLIC fictional fixture (deploy/test-fixtures/halden_secret.txt, the
+# frozen simulator's documented demo value) because the independent oracles and resilience harness authenticate with it;
+# default and demo deployments (compose.yaml alone) use the generated deploy/secrets/halden_secret.txt.
+secrets:
+  halden_secret: {file: ./deploy/test-fixtures/halden_secret.txt}
+  openai_api_key: {file: ./deploy/test-fixtures/openai_api_key.txt}  # empty: tests never mount the real key
+
+services:
+  db:
+    ports: ["127.0.0.1:55432:5432"]

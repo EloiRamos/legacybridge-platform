@@ -1,0 +1,25 @@
+/* Design tokens — LEGACYBRIDGE console.
+   CSS + a design-token file; no component library.
+     Type   display: Iowan Old Style / Charter / Georgia (serif, 600)
+            text:    Avenir Next / Segoe UI / system (humanist sans)
+            data:    ui-monospace for identifiers and hashes; tabular numerals
+            scale:   34 / 27 / 22 / 17 / 15 / 14 (body) / 13 / 12.5 / 12
+     Space  8-pt: 4 8 12 16 20 24 32 48
+     Radius 9 controls · 11 buttons/inputs · 14–16 cards · 999 pills
+     Status rust = uncertainty (never red); red = proven rejection;
+            outline = weaker evidence; dashed = proven absence / not known */
+:root {
+  --bg: #FBFAF7; --sf: #FFFFFF; --sf2: #F5F3EE; --sf3: #F1EEE6;
+  --bd: #ECE8DF; --bd2: #E2DDD2; --bd3: #CFC8BB;
+  --tx: #1C1B19; --tx2: #44403C; --tx3: #6B645E;
+  --ac: #0F6B63; --acH: #0B524C; --acBg: #E8F1EF;
+  --ok: #166534; --okBg: #E7F4EC; --okBd: #CFE6D8;
+  --info: #1E4E8C; --infoBg: #E8EFF8; --infoBd: #C8D8EE;
+  --warn: #9A3412; --warnBg: #FFF4EA; --warnBg2: #FFFAF5; --warnBd: #C2410C; --warnBd2: #E8A76F;
+  --bad: #9F1239; --badBg: #FDECEF; --badBd: #F4C2CC;
+  --neu: #44403C; --neuBg: #F1EEE6;
+  --att: #6B21A8; --attBg: #F5EDFB;
+  --serif: "Iowan Old Style", "Charter", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --sans: "Avenir Next", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}

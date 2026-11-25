@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="t">LEGACYBRIDGE components</title>
+  <desc id="d">A browser console talks over loopback to one application process (API, workflow, engines, optional assistant, adapters). The process stores state in PostgreSQL and hands orders to two simulated legacy systems: HALDEN over synchronous HTTP and SKARVIK through a file share. A standalone verifier checks audit exports. The OpenAI API is optional and disabled by default.</desc>
+  <style>
+    .bg{fill:#ffffff}
+    .box{fill:#f7f9fc;stroke:#2b4a6f;stroke-width:1.5}
+    .proc{fill:#ffffff;stroke:#2b4a6f;stroke-width:1.2}
+    .ext{fill:#fff7e6;stroke:#a36a00;stroke-width:1.5}
+    .opt{fill:#f4f4f4;stroke:#777;stroke-width:1.2;stroke-dasharray:5 4}
+    .db{fill:#eef6ee;stroke:#2f6b3a;stroke-width:1.5}
+    .h{font-size:15px;font-weight:700;fill:#13263d}
+    .t{font-size:12.5px;fill:#13263d}
+    .s{font-size:11.5px;fill:#40546b}
+    .line{stroke:#2b4a6f;stroke-width:1.6;fill:none;marker-end:url(#a)}
+    .dash{stroke:#777;stroke-width:1.4;fill:none;stroke-dasharray:5 4;marker-end:url(#a2)}
+    .tb{fill:none;stroke:#c0392b;stroke-width:1.2;stroke-dasharray:3 4}
+    .tbl{font-size:11px;fill:#c0392b}
+    @media (prefers-color-scheme: dark){
+      .bg{fill:#0d1117}
+      .box{fill:#17212e;stroke:#8fb3dc}.proc{fill:#0f1720;stroke:#8fb3dc}.ext{fill:#2a2213;stroke:#e0a73a}
+      .opt{fill:#1c1c1c;stroke:#999}.db{fill:#14241a;stroke:#6dbd7e}.h,.t{fill:#e6eef7}.s{fill:#b2c2d4}
+      .line{stroke:#8fb3dc}.dash{stroke:#999}.tb{stroke:#e06b5e}.tbl{fill:#e06b5e}
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2b4a6f"/></marker>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1120" height="560"/>
+  <rect class="box" x="20" y="200" width="170" height="110" rx="8"/>
+  <text class="h" x="35" y="228">Browser</text>
+  <text class="t" x="35" y="250">React console</text>
+  <text class="s" x="35" y="270">no tokens in storage</text>
+  <text class="s" x="35" y="288">permitted actions only</text>
+
+  <rect class="box" x="250" y="40" width="470" height="316" rx="10"/>
+  <text class="h" x="268" y="66">Application — one process</text>
+  <rect class="proc" x="270" y="84" width="200" height="70" rx="6"/>
+  <text class="t" x="282" y="108">API (FastAPI)</text>
+  <text class="s" x="282" y="127">sessions · CSRF · Origin</text>
+  <text class="s" x="282" y="144">roles · SoD · step-up</text>
+  <rect class="proc" x="500" y="84" width="200" height="70" rx="6"/>
+  <text class="t" x="512" y="108">Workflow commands</text>
+  <text class="s" x="512" y="127">version + hash bound approval</text>
+  <text class="s" x="512" y="144">overlap guard</text>
+  <rect class="proc" x="270" y="176" width="430" height="70" rx="6"/>
+  <text class="t" x="282" y="200">Engines</text>
+  <text class="s" x="282" y="219">executor (one handoff per authorization) · ack poller · reconciler</text>
+  <text class="s" x="282" y="236">sweeper (crash → UNKNOWN, never resend) · snapshot refresher</text>
+  <rect class="opt" x="270" y="268" width="200" height="74" rx="6"/>
+  <text class="t" x="282" y="292">Assistant (optional)</text>
+  <text class="s" x="282" y="311">9 read/draft tools</text>
+  <text class="s" x="282" y="328">signed-in person's rights</text>
+  <rect class="proc" x="500" y="268" width="200" height="74" rx="6"/>
+  <text class="t" x="512" y="292">Adapters, one port</text>
+  <text class="s" x="512" y="311">declared capabilities</text>
+  <text class="s" x="512" y="328">HALDEN · SKARVIK</text>
+  <rect class="db" x="270" y="372" width="430" height="88" rx="6"/>
+  <text class="t" x="282" y="396">PostgreSQL 17</text>
+  <text class="s" x="282" y="415">roles lbf_app · lbf_audit_reader · lbf_migrator (least privilege)</text>
+  <text class="s" x="282" y="432">operations · approvals · transmissions (UNIQUE authorization_id)</text>
+  <text class="s" x="282" y="449">append-only audit hash chain, committed with each transition</text>
+
+  <rect class="ext" x="800" y="60" width="300" height="100" rx="8"/>
+  <text class="h" x="816" y="88">HALDEN ERP 3.1 (simulator)</text>
+  <text class="s" x="816" y="110">synchronous HTTP, frozen contract</text>
+  <text class="s" x="816" y="128">no idempotency, single service ticket</text>
+  <text class="s" x="816" y="146">commit-then-timeout is possible</text>
+  <rect class="ext" x="800" y="190" width="300" height="100" rx="8"/>
+  <text class="h" x="816" y="218">SKARVIK OES 4 (simulator)</text>
+  <text class="s" x="816" y="240">files on a share: inbox, acks, extracts</text>
+  <text class="s" x="816" y="258">async pickup, late or lost acks</text>
+  <text class="s" x="816" y="276">dedup by message id within a window</text>
+  <rect class="opt" x="800" y="320" width="300" height="64" rx="8"/>
+  <text class="t" x="816" y="346">OpenAI API (optional)</text>
+  <text class="s" x="816" y="366">disabled by default; double opt-in</text>
+  <rect class="box" x="800" y="410" width="300" height="64" rx="8"/>
+  <text class="t" x="816" y="436">oracles/audit_verify.py</text>
+  <text class="s" x="816" y="456">standalone verifier (stdlib, never imports lbf)</text>
+
+  <path class="line" d="M190 255 L268 140"/>
+  <text class="s" x="140" y="180">127.0.0.1:8080</text>
+  <path class="line" d="M470 119 L498 119"/>
+  <path class="line" d="M600 154 L600 174"/><path class="line" d="M600 342 L600 370"/>
+  <path class="line" d="M600 246 L600 266"/>
+  <path class="line" d="M485 246 L485 370"/>
+  <path class="line" d="M700 284 L798 70"/>
+  <text class="s" x="740" y="36">order POST,</text>
+  <text class="s" x="740" y="50">max. one per authorization</text>
+  <path class="line" d="M700 310 L798 250"/>
+  <path class="dash" d="M430 342 L430 350 L745 350 L745 357 L798 357"/>
+  <path class="line" d="M720 345 L760 345 L760 440 L798 440"/>
+  <text class="s" x="800" y="404">audit export, through the API</text>
+
+  <rect class="tb" x="236" y="30" width="498" height="462" rx="12"/>
+  <text class="tbl" x="240" y="510">trust boundary: application and its database (browser, backends, model and verifier are outside)</text>
+  <text class="s" x="20" y="545">Fictional engagement; HALDEN and SKARVIK are simulators. Dashed: optional and disabled by default.</text>
+</svg>

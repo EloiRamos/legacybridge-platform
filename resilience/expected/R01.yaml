@@ -1,0 +1,17 @@
+id: R01
+title: Backend unavailable at submission time
+severity: C
+variants:
+  - name: halden_down
+    backend: halden
+    setup: operation READY for HALDEN 00417, 10 x BW-1001; approved by a second user
+    fault: HALDEN container stopped before the executor runs
+    expected: {final_state: NOT_APPLIED, evidence: NOT_SENT, app_handoffs: 0, oracle_handoffs: 0, backend_orders_with_ref: 0, resends: 0, new_approval_possible: true}
+    forbidden: [any retry, any E8 on the wire]
+  - name: skarvik_down
+    backend: skarvik
+    setup: operation READY for SKARVIK KND-0081, 10 x BW-1001 (NVB-6205-2RS); approved
+    fault: SKARVIK container stopped (the exchange share stays writable)
+    expected: {path: [AWAITING_ACK, UNKNOWN], intermediate_evidence: ACK_OVERDUE, then: withdraw_unclaimed authorized by ops_manager, final_state: NOT_APPLIED, evidence: WITHDRAWN_BEFORE_PICKUP, app_handoffs: 1, oracle_claims: 0, backend_orders_with_message_id: 0, resends: 0}
+    forbidden: [NOT_APPLIED without withdraw evidence, redelivery]
+oracles: [wiretap ledger (0 E8), SKARVIK received ledger (0 claims), withdrawn/ listing]
