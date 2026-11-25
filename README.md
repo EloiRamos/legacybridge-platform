@@ -8,7 +8,7 @@ A distributor's order desk works on two old systems nobody may change. HALDEN ca
 
 ![Overview of the console: approvals waiting, one unknown outcome, one order that needs a decision, both legacy systems reachable, recent outcomes](docs/portfolio/screenshots/01-dashboard.png)
 
-<sub>Console of this release on the simulators, no model in use. Every image's origin: [capture manifest](docs/portfolio/screenshots/MANIFEST.md).</sub>
+> Console of this release on the simulators, no model in use. Every image's origin: [capture manifest](docs/portfolio/screenshots/MANIFEST.md).
 
 [Business problem](#the-business-problem) · [From PoC to platform](#from-proof-of-concept-to-platform) · [What was delivered](#what-was-delivered) · [The assistant](#the-governed-assistant) · [Architecture](#architecture-and-trust-boundaries) · [Quick start](#quick-start) · [What went wrong](#what-went-wrong-and-how-i-fixed-it) · [Verification](#verification) · [Limitations](#known-limitations)
 
@@ -93,7 +93,7 @@ The assistant shortens two routine jobs: finding the right record across both sy
 
 ![Live model, answer card: the assistant cannot approve and names the human action](docs/portfolio/screenshots/16-live-authority-boundary-card.png)
 
-<sub>Live `gpt-6-luna`, 2026-11-25, this product code, fictional data, simulated back ends. Whole pages: [2](docs/portfolio/screenshots/13-live-draft-receipt.png), [3](docs/portfolio/screenshots/14-live-proposal.png), [4](docs/portfolio/screenshots/16-live-authority-boundary.png). The confirmation after step 3 is [carried out by the application, without a model](docs/portfolio/screenshots/15-live-proposal-confirmed.png).</sub>
+> Live `gpt-6-luna`, 2026-11-25, this product code, fictional data, simulated back ends. Whole pages: [2](docs/portfolio/screenshots/13-live-draft-receipt.png), [3](docs/portfolio/screenshots/14-live-proposal.png), [4](docs/portfolio/screenshots/16-live-authority-boundary.png). The confirmation after step 3 is [carried out by the application, without a model](docs/portfolio/screenshots/15-live-proposal-confirmed.png).
 
 - **Intent** is decided by the application. A draft is written directly only if the whole message is a drafting command of a narrow English grammar; everything else is at most a proposal. The model's choice of a tool is never enough.
 - **Facts** are one field of one tool result, compared exactly and rendered by the application. Free text is checked heuristically (numbers, identifiers, hold direction, claimed actions), **not** for meaning.
